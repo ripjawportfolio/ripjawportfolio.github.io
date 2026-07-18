@@ -322,7 +322,7 @@
   .cert-list li span{ color:var(--parchment-dim); font-family:'IBM Plex Mono', monospace; font-size:0.68rem; white-space:nowrap; }
 
   /* ---------- contact ---------- */
-  .contact-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:36px; }
+  .contact-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:24px; margin-top:36px; }
   @media (max-width:700px){ .contact-grid{ grid-template-columns:1fr; } }
   .contact-card{
     border:1px solid var(--ink-line);
@@ -469,7 +469,30 @@
 
     <section id="projects" class="reveal">
       <div class="eyebrow">03 — Systems &amp; Design</div>
-      <h2 style="font-size:1.9rem;">Featured project</h2>
+      <h2 style="font-size:1.9rem;">Featured projects</h2>
+
+      <div class="case">
+        <div class="case-head">
+          <h3>The Fractured Mind</h3>
+          <span class="status done">Released · Playable</span>
+        </div>
+        <div class="tag-row">
+          <span class="tag">Interactive Fiction</span>
+          <span class="tag">Psychological Horror</span>
+          <span class="tag">Twine</span>
+          <span class="tag">HTML5</span>
+        </div>
+        <p>
+          A choice-driven psychological thriller: you play a forensic psychologist unraveling
+          the dark, supernatural secrets buried within a patient's mind. Built in Twine, every
+          choice is permanent — there is no going back, and the branching structure is built
+          to make that weight felt rather than just stated.
+        </p>
+        <a class="case-link" href="https://ripjaw-04.itch.io/the-fractured-mind" target="_blank" rel="noopener">
+          Play on itch.io
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H5M11 3V9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
 
       <div class="case">
         <div class="case-head">
@@ -608,6 +631,10 @@
         <a class="contact-card" href="https://www.linkedin.com/in/abhishek-ripjaw-kumar" target="_blank" rel="noopener">
           <div class="k">LinkedIn</div>
           <div class="v">abhishek-ripjaw-kumar</div>
+        </a>
+        <a class="contact-card" href="https://ripjaw-04.itch.io/the-fractured-mind" target="_blank" rel="noopener">
+          <div class="k">itch.io</div>
+          <div class="v">ripjaw-04</div>
         </a>
       </div>
     </section>
