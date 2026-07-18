@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abhishek Kumar — Game &amp; Narrative Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14161c;
+    --ink-raised:#1c1f29;
+    --ink-line: rgba(236,228,208,0.12);
+    --parchment:#ece4d0;
+    --parchment-dim:#9c9483;
+    --gold:#c9a227;
+    --gold-soft: rgba(201,162,39,0.14);
+    --ember:#c1522a;
+    --teal:#3f5a56;
+    --maxw: 1180px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--parchment);
+    font-family:'Inter', sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:var(--gold); color:var(--ink); }
+
+  h1,h2,h3,h4{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    margin:0;
+    color:var(--parchment);
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--gold);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:14px;
+  }
+  .eyebrow::before{
+    content:'';
+    width:22px; height:1px;
+    background:var(--gold);
+    display:inline-block;
+  }
+  a{ color:inherit; }
+  p{ color:var(--parchment-dim); max-width:60ch; }
+
+  /* ---------- layout shell ---------- */
+  .shell{
+    display:grid;
+    grid-template-columns: 260px 1fr;
+    max-width: var(--maxw);
+    margin:0 auto;
+  }
+  @media (max-width: 900px){
+    .shell{ grid-template-columns: 1fr; }
+  }
+
+  /* ---------- index rail ---------- */
+  .rail{
+    position:sticky;
+    top:0;
+    align-self:start;
+    height:100vh;
+    padding:40px 20px 40px 32px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    border-right:1px solid var(--ink-line);
+  }
+  @media (max-width:900px){
+    .rail{
+      position:sticky; top:0; height:auto;
+      flex-direction:row;
+      align-items:center;
+      justify-content:space-between;
+      padding:16px 20px;
+      background:rgba(20,22,28,0.92);
+      backdrop-filter: blur(6px);
+      border-right:none;
+      border-bottom:1px solid var(--ink-line);
+      z-index:50;
+    }
+    .rail .toc, .rail .rail-foot{ display:none; }
+  }
+  .mono{
+    width:38px; height:38px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .toc{ list-style:none; margin:56px 0 0; padding:0; }
+  .toc li{ margin-bottom:2px; }
+  .toc a{
+    text-decoration:none;
+    display:flex;
+    gap:12px;
+    align-items:baseline;
+    padding:9px 10px;
+    border-radius:4px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.78rem;
+    color:var(--parchment-dim);
+    letter-spacing:0.02em;
+    transition: color .25s ease, background .25s ease;
+  }
+  .toc a .num{ color:var(--gold); opacity:0.7; font-size:0.72rem; }
+  .toc a:hover, .toc a.active{
+    color:var(--parchment);
+    background:var(--gold-soft);
+  }
+  .toc a.active .num{ opacity:1; }
+  .rail-foot{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.68rem;
+    color:var(--parchment-dim);
+    line-height:1.7;
+    opacity:0.75;
+  }
+
+  main{ min-width:0; }
+  section{
+    padding: 120px 56px;
+    max-width: 880px;
+  }
+  @media (max-width:900px){
+    section{ padding:72px 24px; }
+  }
+
+  /* ---------- divider / signature element ---------- */
+  .thread-wrap{ padding: 0 56px; max-width:880px; }
+  @media (max-width:900px){ .thread-wrap{ padding:0 24px; } }
+  .thread{ width:100%; height:34px; display:block; overflow:visible; }
+  .thread path{
+    fill:none;
+    stroke:var(--gold);
+    stroke-width:1.4;
+    stroke-linecap:round;
+    stroke-dasharray: 620;
+    stroke-dashoffset: 620;
+    opacity:0.75;
+    transition: stroke-dashoffset 1.4s cubic-bezier(.4,.1,.2,1);
+  }
+  .thread.revealed path{ stroke-dashoffset:0; }
+
+  /* ---------- hero ---------- */
+  .hero{ padding-top:96px; padding-bottom:80px; }
+  .hero-tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:22px;
+  }
+  .hero h1{
+    font-size: clamp(2.6rem, 6vw, 4.6rem);
+    line-height:1.02;
+    letter-spacing:-0.01em;
+  }
+  .hero .role-line{
+    margin-top:22px;
+    font-size:1.05rem;
+    color:var(--parchment-dim);
+    display:flex; flex-wrap:wrap; gap:10px 0;
+  }
+  .role-pill{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.78rem;
+    border:1px solid var(--ink-line);
+    padding:6px 12px;
+    border-radius:100px;
+    margin-right:10px;
+    color:var(--parchment);
+  }
+  .hero-desc{ margin-top:26px; font-size:1.05rem; }
+  .hero-actions{ margin-top:38px; display:flex; gap:16px; flex-wrap:wrap; }
+  .btn{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.78rem;
+    letter-spacing:0.04em;
+    text-decoration:none;
+    padding:13px 22px;
+    border-radius:4px;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    transition: transform .2s ease, background .2s ease, border-color .2s ease;
+  }
+  .btn-primary{
+    background:var(--gold);
+    color:var(--ink);
+  }
+  .btn-primary:hover{ transform:translateY(-2px); background:#dab435; }
+  .btn-ghost{
+    border:1px solid var(--ink-line);
+    color:var(--parchment);
+  }
+  .btn-ghost:hover{ border-color:var(--gold); color:var(--gold); transform:translateY(-2px); }
+
+  /* ---------- about ---------- */
+  .about-grid{ display:grid; grid-template-columns: 1.4fr 1fr; gap:48px; margin-top:32px; }
+  @media (max-width:700px){ .about-grid{ grid-template-columns:1fr; } }
+  .fact-list{ list-style:none; margin:0; padding:0; border-left:1px solid var(--ink-line); }
+  .fact-list li{ padding:0 0 22px 20px; }
+  .fact-list .k{
+    display:block; font-family:'IBM Plex Mono', monospace; font-size:0.68rem;
+    letter-spacing:0.12em; text-transform:uppercase; color:var(--gold); margin-bottom:5px;
+  }
+  .fact-list .v{ color:var(--parchment); font-size:0.95rem; }
+
+  /* ---------- experience ---------- */
+  .timeline{ margin-top:36px; }
+  .job{
+    position:relative;
+    padding:0 0 44px 30px;
+    border-left:1px solid var(--ink-line);
+  }
+  .job:last-child{ padding-bottom:0; }
+  .job::before{
+    content:'';
+    position:absolute; left:-4.5px; top:4px;
+    width:8px; height:8px; border-radius:50%;
+    background:var(--gold);
+  }
+  .job-top{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px 20px; align-items:baseline; }
+  .job-role{ font-family:'Fraunces', serif; font-size:1.25rem; color:var(--parchment); }
+  .job-org{ color:var(--gold); font-family:'IBM Plex Mono', monospace; font-size:0.8rem; }
+  .job-date{ font-family:'IBM Plex Mono', monospace; font-size:0.72rem; color:var(--parchment-dim); white-space:nowrap; }
+  .job ul{ margin:14px 0 0; padding-left:18px; color:var(--parchment-dim); }
+  .job li{ margin-bottom:6px; }
+
+  /* ---------- project cards ---------- */
+  .case{
+    background:var(--ink-raised);
+    border:1px solid var(--ink-line);
+    border-radius:6px;
+    padding:34px;
+    margin-top:28px;
+  }
+  .case-head{ display:flex; justify-content:space-between; align-items:flex-start; gap:20px; flex-wrap:wrap; }
+  .case h3{ font-size:1.5rem; }
+  .status{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.65rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    padding:5px 10px;
+    border-radius:100px;
+    white-space:nowrap;
+  }
+  .status.dev{ background:rgba(201,162,39,0.16); color:var(--gold); }
+  .status.done{ background:rgba(63,90,86,0.35); color:#8fb3ac; }
+  .tag-row{ display:flex; gap:8px; flex-wrap:wrap; margin:14px 0 18px; }
+  .tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.68rem;
+    color:var(--parchment-dim);
+    border:1px solid var(--ink-line);
+    padding:4px 10px;
+    border-radius:4px;
+  }
+  .case p{ max-width:none; font-size:0.95rem; }
+  .quote{
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-size:1.08rem;
+    color:var(--parchment);
+    border-left:2px solid var(--ember);
+    padding-left:18px;
+    margin:22px 0;
+  }
+  .case-link{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.75rem;
+    color:var(--gold);
+    text-decoration:none;
+    display:inline-flex; align-items:center; gap:8px;
+    margin-top:6px;
+  }
+  .case-link:hover{ color:#dab435; }
+  .case-link svg{ transition:transform .2s ease; }
+  .case-link:hover svg{ transform:translateX(3px); }
+
+  .subhead{ margin-top:64px; }
+  .subhead .eyebrow{ margin-bottom:8px; }
+  .subhead h3{ font-size:1.6rem; margin-bottom:10px;}
+
+  /* ---------- skills ---------- */
+  .skill-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:36px; margin-top:32px; }
+  @media (max-width:700px){ .skill-grid{ grid-template-columns:1fr; } }
+  .skill-col .eyebrow{ margin-bottom:16px; }
+  .chip-row{ display:flex; flex-wrap:wrap; gap:10px; }
+  .chip{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.78rem;
+    color:var(--parchment);
+    border:1px solid var(--ink-line);
+    padding:8px 14px;
+    border-radius:4px;
+    transition:border-color .2s ease, color .2s ease;
+  }
+  .chip:hover{ border-color:var(--gold); color:var(--gold); }
+  .cert-list{ list-style:none; margin:0; padding:0; }
+  .cert-list li{
+    padding:12px 0; border-bottom:1px solid var(--ink-line);
+    font-size:0.92rem; color:var(--parchment-dim);
+    display:flex; justify-content:space-between; gap:16px;
+  }
+  .cert-list li span{ color:var(--parchment-dim); font-family:'IBM Plex Mono', monospace; font-size:0.68rem; white-space:nowrap; }
+
+  /* ---------- contact ---------- */
+  .contact-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:36px; }
+  @media (max-width:700px){ .contact-grid{ grid-template-columns:1fr; } }
+  .contact-card{
+    border:1px solid var(--ink-line);
+    border-radius:6px;
+    padding:22px;
+    text-decoration:none;
+    transition:border-color .2s ease, transform .2s ease;
+  }
+  .contact-card:hover{ border-color:var(--gold); transform:translateY(-3px); }
+  .contact-card .k{ font-family:'IBM Plex Mono', monospace; font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); }
+  .contact-card .v{ margin-top:10px; color:var(--parchment); font-size:0.98rem; word-break:break-word; }
+
+  footer{
+    padding:40px 56px 60px;
+    max-width:880px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.7rem;
+    color:var(--parchment-dim);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  }
+  @media (max-width:900px){ footer{ padding:32px 24px 48px; } }
+
+  .reveal{ opacity:0; transform:translateY(16px); transition:opacity .7s ease, transform .7s ease; }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition:none !important; scroll-behavior:auto !important; }
+    .reveal{ opacity:1; transform:none; }
+    .thread path{ stroke-dashoffset:0; }
+  }
+
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--gold);
+    outline-offset:3px;
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <nav class="rail">
+    <a href="#hero" class="mono" aria-label="Home">
+      <svg width="38" height="38" viewBox="0 0 38 38" fill="none">
+        <circle cx="19" cy="19" r="18" stroke="var(--gold)" stroke-width="1"/>
+        <path d="M11 26 L15 12 L19 22 L23 12 L27 26" stroke="var(--gold)" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+    <ul class="toc" id="toc">
+      <li><a href="#hero" data-target="hero"><span class="num">00</span>Cover</a></li>
+      <li><a href="#about" data-target="about"><span class="num">01</span>About</a></li>
+      <li><a href="#experience" data-target="experience"><span class="num">02</span>Experience</a></li>
+      <li><a href="#projects" data-target="projects"><span class="num">03</span>Projects</a></li>
+      <li><a href="#narrative" data-target="narrative"><span class="num">04</span>Narrative</a></li>
+      <li><a href="#skills" data-target="skills"><span class="num">05</span>Skills</a></li>
+      <li><a href="#contact" data-target="contact"><span class="num">06</span>Contact</a></li>
+    </ul>
+    <div class="rail-foot">
+      HYDERABAD, IN<br>
+      GDD VOL. I — 2026
+    </div>
+  </nav>
+
+  <main>
+
+    <section class="hero" id="hero">
+      <div class="hero-tag">Game Design Portfolio — Vol. I</div>
+      <h1>Abhishek<br>Kumar</h1>
+      <div class="role-line">
+        <span class="role-pill">Game Designer</span>
+        <span class="role-pill">Narrative Designer</span>
+        <span class="role-pill">Hyderabad, India</span>
+      </div>
+      <p class="hero-desc">I design story-driven games that pull from folklore, adventure, and myth —
+      building worlds where narrative and gameplay work the same shift, so the mechanics
+      earn the feeling the story is going for.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="https://dd338703-2b55-41a1-b256-7e609d9bd8f6.filesusr.com/ugd/9706c4_d9b1ae58fe7b4358a06b7b47ca762afb.pdf" target="_blank" rel="noopener">
+          Download Résumé
+        </a>
+        <a class="btn btn-ghost" href="#contact">Get in Touch</a>
+      </div>
+    </section>
+
+    <div class="thread-wrap"><svg class="thread" viewBox="0 0 700 34"><path d="M0 17 Q 40 2, 80 17 T 160 17 T 240 17 T 320 17 T 400 17 T 480 17 T 560 17 T 640 17 T 700 17"/></svg></div>
+
+    <section id="about" class="reveal">
+      <div class="eyebrow">01 — About</div>
+      <h2 style="font-size:1.9rem;">Building worlds from the story outward</h2>
+      <div class="about-grid">
+        <p style="font-size:1.02rem;">
+          I'm a game and narrative designer based in Hyderabad, India, currently completing a
+          B.A. (Hons.) in Game Art &amp; Design. My work sits at the seam between systems and
+          story: I'm drawn to genre-bending premises rooted in folklore and mythology, and to
+          the discipline of turning a strong pitch into a documented, playable design.
+          Across internships and personal projects, that's meant writing branching dialogue,
+          building gameplay loops, and producing the design documentation that keeps a
+          team's story straight.
+        </p>
+        <ul class="fact-list">
+          <li><span class="k">Focus</span><span class="v">Narrative Design · Systems Design · Worldbuilding</span></li>
+          <li><span class="k">Education</span><span class="v">B.A. (Hons.) Game Art &amp; Design, Backstage Pass Institute of Gaming &amp; Technology — 2023–2027</span></li>
+          <li><span class="k">Certified in</span><span class="v">Generative AI for Games Development</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="thread-wrap"><svg class="thread" viewBox="0 0 700 34"><path d="M0 17 Q 40 32, 80 17 T 160 17 T 240 17 T 320 17 T 400 17 T 480 17 T 560 17 T 640 17 T 700 17"/></svg></div>
+
+    <section id="experience" class="reveal">
+      <div class="eyebrow">02 — Experience</div>
+      <h2 style="font-size:1.9rem;">Where I've worked the craft</h2>
+      <div class="timeline">
+        <div class="job">
+          <div class="job-top">
+            <div>
+              <div class="job-role">Game Writer &amp; Narrative Design Intern</div>
+              <div class="job-org">Sports Media Inc.</div>
+            </div>
+            <div class="job-date">Apr 2026 — Present</div>
+          </div>
+          <ul>
+            <li>Scenario writer on an Emergency Vehicle Operating Course (EVOC) training game project.</li>
+            <li>Analyze advertisement placement and messaging during live sporting events.</li>
+          </ul>
+        </div>
+        <div class="job">
+          <div class="job-top">
+            <div>
+              <div class="job-role">Game Design Intern</div>
+              <div class="job-org">Abhitech Games</div>
+            </div>
+            <div class="job-date">Nov 2025 — Feb 2026</div>
+          </div>
+          <ul>
+            <li>Designed a pirate-themed roleplaying game from concept through documentation.</li>
+            <li>Produced a clear game design document and a detailed mood board to align the team.</li>
+            <li>Developed a wide range of supporting game assets.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <div class="thread-wrap"><svg class="thread" viewBox="0 0 700 34"><path d="M0 17 Q 40 2, 80 17 T 160 17 T 240 17 T 320 17 T 400 17 T 480 17 T 560 17 T 640 17 T 700 17"/></svg></div>
+
+    <section id="projects" class="reveal">
+      <div class="eyebrow">03 — Systems &amp; Design</div>
+      <h2 style="font-size:1.9rem;">Featured project</h2>
+
+      <div class="case">
+        <div class="case-head">
+          <h3>Loot &amp; Ledger</h3>
+          <span class="status dev">In Development</span>
+        </div>
+        <div class="tag-row">
+          <span class="tag">Idle / Roguelike</span>
+          <span class="tag">Mobile F2P Economy</span>
+          <span class="tag">Systems Design</span>
+          <span class="tag">Pirate Theme</span>
+        </div>
+        <p>
+          A pirate-themed idle/roguelike prototype built to sharpen mobile free-to-play systems
+          design — economy modeling, progression pacing, and run structure — in a space
+          adjacent to, but distinct from, my narrative work. The project is scoped as a
+          documented design sprint: economy spreadsheets and loop diagrams, a written AI
+          workflow log, and playtesting notes, rather than a shipped build.
+        </p>
+        <p>
+          It's a deliberate gap-filler in my portfolio — proof of systems and economy thinking
+          to sit alongside the narrative case studies below.
+        </p>
+      </div>
+
+      <div class="subhead">
+        <div class="eyebrow" id="narrative">04 — Narrative Case Studies</div>
+        <h3>Where story and mechanic share a spine</h3>
+        <p>Two solo narrative-design projects, each built out as a full case study: premise,
+        worldbuilding, systems that carry the story, and a writing sample.</p>
+      </div>
+
+      <div class="case">
+        <div class="case-head">
+          <h3>Serpent &amp; Shravan</h3>
+          <span class="status done">Case Study</span>
+        </div>
+        <div class="tag-row">
+          <span class="tag">Narrative-Driven / Interactive Story</span>
+          <span class="tag">Mobile · PC (Unreal Engine)</span>
+          <span class="tag">Narrative Designer (Solo)</span>
+        </div>
+        <p>
+          A child listens to an elder recount sacred stories of the Madhushravani festival —
+          and as the stories unfold, the line between myth and reality begins to blur. Told
+          through dual layers, a grounded rural household during monsoon season, and a
+          mythological layer the player steps into, the piece explores innocence versus
+          understanding, faith and tradition, and oral storytelling as legacy. A dialogue-pause
+          and story-playback system carries the loop: narration, play, question, dialogue, and
+          resolution — with visual direction pulled from Madhubani art.
+        </p>
+        <div class="quote">"They say the serpent does not strike without reason… but reason is not always meant for us to understand."</div>
+        <a class="case-link" href="https://dd338703-2b55-41a1-b256-7e609d9bd8f6.filesusr.com/ugd/9706c4_4188a384bd0f4bb8829d7b65a6c3a9aa.pdf" target="_blank" rel="noopener">
+          Read the full case study (PDF)
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H5M11 3V9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+
+      <div class="case">
+        <div class="case-head">
+          <h3>Magma Chronicle</h3>
+          <span class="status done">Case Study</span>
+        </div>
+        <div class="tag-row">
+          <span class="tag">Story-Driven Action Adventure</span>
+          <span class="tag">Mobile</span>
+          <span class="tag">Narrative Designer / Worldbuilder</span>
+        </div>
+        <p>
+          In the volcanic world of Eridia, five flame-wielding heroes rise against an ancient
+          entity — the Firelord — whose awakening threatens to consume everything. A mythic
+          narrative about power, sacrifice, and rebirth, told through environmental
+          storytelling and combat-driven progression across an early–mid–late arc, with
+          elemental combat and character-switching mechanics built to carry the story's
+          themes into the moment-to-moment gameplay.
+        </p>
+        <div class="quote">"Fire does not choose what it consumes… only what remains after."</div>
+        <a class="case-link" href="https://dd338703-2b55-41a1-b256-7e609d9bd8f6.filesusr.com/ugd/9706c4_35aefc9685234d709c365f911d3273e1.pdf" target="_blank" rel="noopener">
+          Read the full case study (PDF)
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H5M11 3V9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </section>
+
+    <div class="thread-wrap"><svg class="thread" viewBox="0 0 700 34"><path d="M0 17 Q 40 32, 80 17 T 160 17 T 240 17 T 320 17 T 400 17 T 480 17 T 560 17 T 640 17 T 700 17"/></svg></div>
+
+    <section id="skills" class="reveal">
+      <div class="eyebrow">05 — Skills</div>
+      <h2 style="font-size:1.9rem;">Tools of the trade</h2>
+      <div class="skill-grid">
+        <div class="skill-col">
+          <div class="eyebrow" style="margin-bottom:16px;">Design</div>
+          <div class="chip-row">
+            <span class="chip">Visual &amp; Branching Narrative</span>
+            <span class="chip">Interactive Storytelling</span>
+            <span class="chip">Game Design Documentation</span>
+            <span class="chip">Gameplay Loop &amp; Progression Design</span>
+            <span class="chip">Genre-Bending</span>
+            <span class="chip">Screenplay Writing</span>
+          </div>
+          <div class="eyebrow" style="margin:32px 0 16px;">Software</div>
+          <div class="chip-row">
+            <span class="chip">Twine</span>
+            <span class="chip">Fade In</span>
+            <span class="chip">Autodesk Maya</span>
+            <span class="chip">Miro</span>
+          </div>
+        </div>
+        <div class="skill-col">
+          <div class="eyebrow" style="margin-bottom:16px;">Certifications</div>
+          <ul class="cert-list">
+            <li>A Complete Guide to Game Design <span>HPGG02</span></li>
+            <li>Generative AI for Games Development <span>HPGG04</span></li>
+            <li>The What &amp; How of Esports Management <span>HPGG01</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <div class="thread-wrap"><svg class="thread" viewBox="0 0 700 34"><path d="M0 17 Q 40 2, 80 17 T 160 17 T 240 17 T 320 17 T 400 17 T 480 17 T 560 17 T 640 17 T 700 17"/></svg></div>
+
+    <section id="contact" class="reveal">
+      <div class="eyebrow">06 — Contact</div>
+      <h2 style="font-size:1.9rem;">Let's build a world together</h2>
+      <p style="margin-top:14px;">Open to game design and narrative design roles, internships,
+      and collaborations. Reach out any of the ways below.</p>
+      <div class="contact-grid">
+        <a class="contact-card" href="mailto:abhishekca023@gmail.com">
+          <div class="k">Email</div>
+          <div class="v">abhishekca023@gmail.com</div>
+        </a>
+        <a class="contact-card" href="tel:+917903127682">
+          <div class="k">Phone</div>
+          <div class="v">+91 7903127682</div>
+        </a>
+        <a class="contact-card" href="https://www.linkedin.com/in/abhishek-ripjaw-kumar" target="_blank" rel="noopener">
+          <div class="k">LinkedIn</div>
+          <div class="v">abhishek-ripjaw-kumar</div>
+        </a>
+      </div>
+    </section>
+
+    <footer>
+      <span>© 2026 Abhishek Kumar</span>
+      <span>Designed as a living game design document</span>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  // scroll-spy nav
+  const links = document.querySelectorAll('.toc a');
+  const sections = ['hero','about','experience','projects','narrative','skills','contact']
+    .map(id => document.getElementById(id)).filter(Boolean);
+
+  const setActive = (id) => {
+    links.forEach(l => l.classList.toggle('active', l.dataset.target === id));
+  };
+
+  const spy = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) setActive(e.target.id);
+    });
+  }, { rootMargin: '-40% 0px -50% 0px', threshold: 0 });
+  sections.forEach(s => spy.observe(s));
+
+  // reveal on scroll
+  const reveal = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting){ e.target.classList.add('in'); reveal.unobserve(e.target); }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => reveal.observe(el));
+
+  // thread draw-on-scroll
+  const threads = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting){ e.target.classList.add('revealed'); threads.unobserve(e.target); }
+    });
+  }, { threshold: 0.4 });
+  document.querySelectorAll('.thread').forEach(el => threads.observe(el));
+</script>
+
+</body>
+</html>
